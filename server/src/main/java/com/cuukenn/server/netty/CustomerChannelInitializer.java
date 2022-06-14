@@ -1,7 +1,8 @@
 package com.cuukenn.server.netty;
 
 import com.cuukenn.common.netty.protocol.TransportProtocolInvocation;
-import com.cuukenn.server.netty.config.NettyServerProperties;
+import com.cuukenn.server.netty.config.ServerNettyProperties;
+import com.cuukenn.server.netty.handler.bound.ConnectionHolderTrigger;
 import com.cuukenn.server.netty.handler.bound.ConnectorIdleStateTrigger;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
@@ -20,7 +21,7 @@ import java.util.concurrent.TimeUnit;
  */
 @RequiredArgsConstructor
 public class CustomerChannelInitializer extends ChannelInitializer<SocketChannel> {
-    private final NettyServerProperties properties;
+    private final ServerNettyProperties properties;
 
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
@@ -37,6 +38,7 @@ public class CustomerChannelInitializer extends ChannelInitializer<SocketChannel
                 .addLast(new ProtobufDecoder(Message.TransportProtocol.getDefaultInstance()))
                 .addLast(new ProtobufVarint32LengthFieldPrepender())
                 .addLast(new ProtobufEncoder())
+                .addLast(new ConnectionHolderTrigger())
                 .addLast(new TransportProtocolInvocation());
     }
 }

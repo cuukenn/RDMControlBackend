@@ -1,6 +1,6 @@
 package com.cuukenn.puppet.netty.config;
 
-import com.cuukenn.common.netty.client.config.NettyClientProperties;
+import com.cuukenn.common.netty.client.config.BaseNettyClientProperties;
 import com.cuukenn.common.netty.client.handler.NettyClient;
 import com.cuukenn.common.netty.client.handler.protocol.PongInvocation;
 import com.cuukenn.common.netty.protocol.IProtocolInvocation;
@@ -27,8 +27,8 @@ public class NettyConfiguration implements InitializingBean {
 
     @Bean
     @ConfigurationProperties(prefix = "app.puppet")
-    public NettyClientProperties tcpProperties() {
-        return new NettyClientProperties();
+    public BaseNettyClientProperties tcpProperties() {
+        return new NettyProperties();
     }
 
     @Bean
@@ -37,7 +37,7 @@ public class NettyConfiguration implements InitializingBean {
     }
 
     @Bean
-    public NettyClient nettyClient(NettyClientProperties properties) {
+    public NettyClient nettyClient(BaseNettyClientProperties properties) {
         return new NettyClient(properties);
     }
 

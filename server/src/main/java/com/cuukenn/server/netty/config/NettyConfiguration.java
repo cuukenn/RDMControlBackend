@@ -24,8 +24,8 @@ public class NettyConfiguration implements InitializingBean {
 
     @Bean
     @ConfigurationProperties(prefix = "app.server")
-    public NettyServerProperties tcpProperties() {
-        return new NettyServerProperties();
+    public ServerNettyProperties tcpProperties() {
+        return new ServerNettyProperties();
     }
 
     @Override

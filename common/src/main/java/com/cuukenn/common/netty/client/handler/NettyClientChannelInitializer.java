@@ -1,6 +1,6 @@
 package com.cuukenn.common.netty.client.handler;
 
-import com.cuukenn.common.netty.client.config.NettyClientProperties;
+import com.cuukenn.common.netty.client.config.BaseNettyClientProperties;
 import com.cuukenn.common.netty.client.handler.bound.ConnectorStateWatchDog;
 import com.cuukenn.common.netty.protocol.TransportProtocolInvocation;
 import io.netty.channel.ChannelInitializer;
@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
  */
 @RequiredArgsConstructor
 public class NettyClientChannelInitializer extends ChannelInitializer<NioSocketChannel> {
-    private final NettyClientProperties properties;
+    private final BaseNettyClientProperties properties;
     private final NettyClient nettyClient;
 
     @Override
@@ -38,6 +38,6 @@ public class NettyClientChannelInitializer extends ChannelInitializer<NioSocketC
                 .addLast(new ProtobufVarint32LengthFieldPrepender())
                 .addLast(new ProtobufEncoder())
                 .addLast(new TransportProtocolInvocation())
-                .addLast(new ConnectorStateWatchDog(nettyClient::reconnect));
+                .addLast(new ConnectorStateWatchDog(nettyClient::reconnect, properties.getApplicationType()));
     }
 }

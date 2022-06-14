@@ -1,6 +1,6 @@
 package com.cuukenn.client.netty.config;
 
-import com.cuukenn.common.netty.client.config.NettyClientProperties;
+import com.cuukenn.common.netty.client.config.BaseNettyClientProperties;
 import com.cuukenn.common.netty.client.handler.NettyClient;
 import com.cuukenn.common.netty.client.handler.protocol.PongInvocation;
 import com.cuukenn.common.netty.protocol.IProtocolInvocation;
@@ -32,12 +32,12 @@ public class NettyConfiguration implements InitializingBean {
 
     @Bean
     @ConfigurationProperties(prefix = "app.client")
-    public NettyClientProperties tcpProperties() {
-        return new NettyClientProperties();
+    public BaseNettyClientProperties tcpProperties() {
+        return new NettyProperties();
     }
 
     @Bean
-    public NettyClient nettyClient(NettyClientProperties properties) {
+    public NettyClient nettyClient(BaseNettyClientProperties properties) {
         return new NettyClient(properties);
     }
 

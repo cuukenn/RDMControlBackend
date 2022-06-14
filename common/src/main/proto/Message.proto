@@ -4,15 +4,30 @@ option java_package = "protocol";
 
 message TransportProtocol{
   ProtocolType type = 1;
+  string id = 2;
+  string puppetName = 3;
   oneof payload {
     NullValue null_value = 10;
+    ErrorMessage error = 11;
   }
 }
 
+message ErrorMessage{
+  uint32 code = 1;
+  string message = 2;
+}
+
 enum ProtocolType{
-  NO_OP = 0 ;
-  PING_REQUEST = 1;
-  PONG_RESPONSE = 2;
+  //异常信息
+  ERROR = 0;
+  //心跳
+  PING = 2;
+  PONG = 3;
+  //连接
+  CONNECT_REQUEST = 4;
+  CONNECT_RESPONSE = 5;
+  //屏幕数据
+  SCREEN = 6;
 }
 
 enum NullValue {

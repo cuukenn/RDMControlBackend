@@ -1,9 +1,8 @@
 package com.cuukenn.server.netty.handler.protocol;
 
-import com.cuukenn.common.netty.enums.ApplicationType;
 import com.cuukenn.common.netty.protocol.ITransportProtocolInvocation;
-import com.cuukenn.common.netty.util.ProtocolUtil;
 import io.netty.channel.ChannelHandlerContext;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import protocol.Message;
 
@@ -13,16 +12,15 @@ import protocol.Message;
  * @author changgg
  */
 @Service
-public class PingInvocation implements ITransportProtocolInvocation {
+@Slf4j
+public class ErrorInvocation implements ITransportProtocolInvocation {
     @Override
     public Message.ProtocolType getSupportType() {
-        return Message.ProtocolType.PING;
+        return Message.ProtocolType.ERROR;
     }
 
     @Override
     public void invoke(ChannelHandlerContext ctx, Message.TransportProtocol message) {
-        ctx.channel().writeAndFlush(ProtocolUtil.createProtocol(ApplicationType.SERVER)
-                .setType(Message.ProtocolType.PONG).setNullValue(Message.NullValue.NULL_VALUE)
-                .build());
+        log.error("some error happened,id:[{}],puppetName:[{}],message:[{}]", message.getId(), message.getPuppetName(), message.getError());
     }
 }

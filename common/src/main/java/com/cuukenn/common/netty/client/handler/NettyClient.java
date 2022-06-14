@@ -1,6 +1,6 @@
 package com.cuukenn.common.netty.client.handler;
 
-import com.cuukenn.common.netty.client.config.NettyClientProperties;
+import com.cuukenn.common.netty.client.config.BaseNettyClientProperties;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class NettyClient {
     private final NioEventLoopGroup eventLoopGroup = new NioEventLoopGroup();
-    private final NettyClientProperties properties;
+    private final BaseNettyClientProperties properties;
     @Getter
     private volatile Channel channel;
 
@@ -37,7 +37,7 @@ public class NettyClient {
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.group(new NioEventLoopGroup())
                 .channel(NioSocketChannel.class)
-                .remoteAddress(properties.getServerHost(), properties.getServerPort())
+                .remoteAddress(properties.getServerAddress(), properties.getPort())
                 .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .handler(new NettyClientChannelInitializer(properties, this));
@@ -48,7 +48,7 @@ public class NettyClient {
                 return;
             }
             channel = futureListener.channel();
-            log.info("connect to server[{}:{}] successfully!", properties.getServerHost(), properties.getServerPort());
+            log.info("connect to server[{}:{}] successfully!", properties.getServerAddress(), properties.getPort());
         });
     }
 

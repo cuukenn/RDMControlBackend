@@ -1,5 +1,7 @@
 package com.cuukenn.common.netty.client.handler.bound;
 
+import com.cuukenn.common.netty.enums.ApplicationType;
+import com.cuukenn.common.netty.util.ProtocolUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleState;
@@ -15,13 +17,12 @@ import protocol.Message;
  */
 @Slf4j
 public class ConnectorStateWatchDog extends ChannelInboundHandlerAdapter {
-    private static final Message.TransportProtocol PING = Message.TransportProtocol.newBuilder()
-            .setType(Message.ProtocolType.PING_REQUEST).setNullValue(Message.NullValue.NULL_VALUE)
-            .build();
     private final Runnable channelInactiveAction;
+    private final ApplicationType type;
 
-    public ConnectorStateWatchDog(Runnable channelInactiveAction) {
+    public ConnectorStateWatchDog(Runnable channelInactiveAction, ApplicationType type) {
         this.channelInactiveAction = channelInactiveAction;
+        this.type = type;
     }
 
     @Override
@@ -31,7 +32,9 @@ public class ConnectorStateWatchDog extends ChannelInboundHandlerAdapter {
             IdleState state = stateEvent.state();
             if (state == IdleState.WRITER_IDLE) {
                 log.debug("long time no write,send ping request to server");
-                ctx.writeAndFlush(PING);
+                ctx.writeAndFlush(ProtocolUtil.createProtocol(type)
+                        .setType(Message.ProtocolType.PING).setNullValue(Message.NullValue.NULL_VALUE)
+                        .build());
             }
         } else {
             super.userEventTriggered(ctx, evt);
