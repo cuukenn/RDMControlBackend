@@ -1,0 +1,9 @@
+/**/.idea/
+/**/target/
+/**/*.log
+/**/*.iml
+/**/*.ipr
+/**/*.iws
+
+#protobuff自动生成类
+/common/src/main/java/protocol/

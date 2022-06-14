@@ -1,0 +1,21 @@
+syntax = "proto3";
+package protocol;
+option java_package = "protocol";
+
+message TransportProtocol{
+  ProtocolType type = 1;
+  oneof payload {
+    NullValue null_value = 10;
+  }
+}
+
+enum ProtocolType{
+  NO_OP = 0 ;
+  PING_REQUEST = 1;
+  PONG_RESPONSE = 2;
+}
+
+enum NullValue {
+  // Null value.
+  NULL_VALUE = 0;
+}
