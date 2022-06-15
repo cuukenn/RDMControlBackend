@@ -16,11 +16,11 @@ import protocol.Message;
  * @author changgg
  */
 @Slf4j
-public class ConnectorStateWatchDog extends ChannelInboundHandlerAdapter {
+public class ConnectionStateWatchDog extends ChannelInboundHandlerAdapter {
     private final Runnable channelInactiveAction;
     private final ApplicationType type;
 
-    public ConnectorStateWatchDog(Runnable channelInactiveAction, ApplicationType type) {
+    public ConnectionStateWatchDog(Runnable channelInactiveAction, ApplicationType type) {
         this.channelInactiveAction = channelInactiveAction;
         this.type = type;
     }
@@ -32,13 +32,17 @@ public class ConnectorStateWatchDog extends ChannelInboundHandlerAdapter {
             IdleState state = stateEvent.state();
             if (state == IdleState.WRITER_IDLE) {
                 log.debug("long time no write,send ping request to server");
-                ctx.writeAndFlush(ProtocolUtil.createProtocol(type)
-                        .setType(Message.ProtocolType.PING).setNullValue(Message.NullValue.NULL_VALUE)
-                        .build());
+                this.doWriteIdleEvent0(ctx);
             }
         } else {
             super.userEventTriggered(ctx, evt);
         }
+    }
+
+    protected void doWriteIdleEvent0(ChannelHandlerContext ctx) {
+        ctx.writeAndFlush(ProtocolUtil.createProtocol(type)
+                .setType(Message.ProtocolType.PING).setNullValue(Message.NullValue.NULL_VALUE)
+                .build());
     }
 
     @Override

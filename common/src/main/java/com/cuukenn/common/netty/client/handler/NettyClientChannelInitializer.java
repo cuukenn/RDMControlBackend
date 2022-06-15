@@ -1,7 +1,7 @@
 package com.cuukenn.common.netty.client.handler;
 
 import com.cuukenn.common.netty.client.config.BaseNettyClientProperties;
-import com.cuukenn.common.netty.client.handler.bound.ConnectorStateWatchDog;
+import com.cuukenn.common.netty.client.handler.bound.ConnectionStateWatchDog;
 import com.cuukenn.common.netty.protocol.TransportProtocolInvocation;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -37,7 +37,11 @@ public class NettyClientChannelInitializer extends ChannelInitializer<NioSocketC
                 .addLast(new ProtobufDecoder(Message.TransportProtocol.getDefaultInstance()))
                 .addLast(new ProtobufVarint32LengthFieldPrepender())
                 .addLast(new ProtobufEncoder())
-                .addLast(new TransportProtocolInvocation())
-                .addLast(new ConnectorStateWatchDog(nettyClient::reconnect, properties.getApplicationType()));
+                .addLast(new TransportProtocolInvocation());
+        initChannel0(socketChannel);
+    }
+
+    protected void initChannel0(NioSocketChannel socketChannel) {
+        socketChannel.pipeline().addLast(new ConnectionStateWatchDog(nettyClient::reconnect, properties.getApplicationType()));
     }
 }

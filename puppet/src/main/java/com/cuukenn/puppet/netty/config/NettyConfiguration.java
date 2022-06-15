@@ -2,27 +2,24 @@ package com.cuukenn.puppet.netty.config;
 
 import com.cuukenn.common.netty.client.config.BaseNettyClientProperties;
 import com.cuukenn.common.netty.client.handler.NettyClient;
+import com.cuukenn.common.netty.client.handler.NettyClientChannelInitializer;
+import com.cuukenn.common.netty.client.handler.bound.ConnectionStateWatchDog;
 import com.cuukenn.common.netty.client.handler.protocol.PongInvocation;
-import com.cuukenn.common.netty.protocol.IProtocolInvocation;
-import com.cuukenn.common.netty.protocol.ProtocolFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.cuukenn.common.netty.client.ui.StageController;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
 
 /**
  * @author changgg
  */
 @Configuration
-public class NettyConfiguration implements InitializingBean {
-    private List<IProtocolInvocation> protocolHandlers;
-
-    @Autowired
-    public void setProtocolHandlers(List<IProtocolInvocation> protocolHandlers) {
-        this.protocolHandlers = protocolHandlers;
+public class NettyConfiguration {
+    @Bean
+    public StageController stageController() {
+        return new StageController();
     }
 
     @Bean
@@ -38,12 +35,16 @@ public class NettyConfiguration implements InitializingBean {
 
     @Bean
     public NettyClient nettyClient(BaseNettyClientProperties properties) {
-        return new NettyClient(properties);
-    }
-
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        protocolHandlers.forEach(ProtocolFactory::addHandlers);
+        return new NettyClient(properties){
+            @Override
+            protected ChannelHandler getChannelHandler0() {
+                return new NettyClientChannelInitializer(properties, this){
+                    @Override
+                    protected void initChannel0(NioSocketChannel socketChannel) {
+                        //socketChannel.pipeline().addLast(new ConnectionStateWatchDog(nettyClient::reconnect, properties.getApplicationType()));
+                    }
+                };
+            }
+        };
     }
 }
