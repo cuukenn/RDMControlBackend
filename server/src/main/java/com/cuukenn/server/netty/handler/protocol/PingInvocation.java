@@ -16,13 +16,11 @@ import protocol.Message;
 public class PingInvocation implements ITransportProtocolInvocation {
     @Override
     public Message.ProtocolType getSupportType() {
-        return Message.ProtocolType.PING;
+        return Message.ProtocolType.HEART_BEAT;
     }
 
     @Override
     public void invoke(ChannelHandlerContext ctx, Message.TransportProtocol message) {
-        ctx.channel().writeAndFlush(ProtocolUtil.createProtocol(ApplicationType.SERVER)
-                .setType(Message.ProtocolType.PONG).setNullValue(Message.NullValue.NULL_VALUE)
-                .build());
+        ctx.channel().writeAndFlush(ProtocolUtil.empty(ApplicationType.SERVER, Message.ProtocolType.HEART_BEAT));
     }
 }

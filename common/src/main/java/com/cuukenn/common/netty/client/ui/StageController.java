@@ -1,10 +1,13 @@
 package com.cuukenn.common.netty.client.ui;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 public class StageController {
-    private final Map<String, Stage> stages;
+    private final Map<String, StageAndController> stages;
     @Getter
     private Stage primaryStage;
 
@@ -35,8 +38,8 @@ public class StageController {
      * @param name  设定Stage的名称
      * @param stage Stage的对象
      */
-    public void addStage(String name, Stage stage) {
-        stages.put(name, stage);
+    public void addStage(String name, Stage stage, ControlledStage controller) {
+        stages.put(name, new StageAndController(stage, controller));
     }
 
     /**
@@ -45,7 +48,7 @@ public class StageController {
      * @param name Stage的名称
      * @return 对应的Stage对象
      */
-    public Stage getStage(String name) {
+    public StageAndController getStage(String name) {
         return stages.get(name);
     }
 
@@ -72,7 +75,7 @@ public class StageController {
                 tempStage.initStyle(style);
             }
             //将设置好的Stage放到HashMap中
-            this.addStage(resource, tempStage);
+            this.addStage(resource, tempStage, controlledStage);
         } catch (Exception e) {
             log.error("loadStage failed", e);
         }
@@ -84,9 +87,8 @@ public class StageController {
      * @param name 需要显示的窗口的名称
      */
     public void setStage(String name) {
-        this.getStage(name).show();
+        Platform.runLater(() -> this.getStage(name).getStage().show());
     }
-
 
     /**
      * 显示Stage并隐藏对应的窗口
@@ -95,8 +97,10 @@ public class StageController {
      * @param close 需要删除的窗口
      */
     public void setStage(String show, String close) {
-        getStage(close).close();
-        setStage(show);
+        Platform.runLater(() -> {
+            getStage(close).getStage().close();
+            setStage(show);
+        });
     }
 
     /**
@@ -114,5 +118,12 @@ public class StageController {
             log.warn("remove stage successful");
             return true;
         }
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class StageAndController {
+        private Stage stage;
+        private ControlledStage controller;
     }
 }

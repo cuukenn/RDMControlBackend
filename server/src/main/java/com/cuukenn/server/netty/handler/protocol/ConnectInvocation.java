@@ -19,34 +19,34 @@ import protocol.Message;
 public class ConnectInvocation implements ITransportProtocolInvocation {
     @Override
     public Message.ProtocolType getSupportType() {
-        return Message.ProtocolType.CONNECT_REQUEST;
+        return Message.ProtocolType.CONNECT;
     }
 
     @Override
     public void invoke(ChannelHandlerContext ctx, Message.TransportProtocol message) {
         ChannelPair channelPair = ConnectionHolderTrigger.getChannelPair(message.getPuppetName());
         if (channelPair == null) {
-            ctx.writeAndFlush(ProtocolUtil.createError(ApplicationType.SERVER, 100, "傀儡机未上线或傀儡机名不正确"));
+            ctx.writeAndFlush(ProtocolUtil.error(ApplicationType.SERVER, 100, "傀儡机未上线或傀儡机名不正确"));
             return;
         }
         Channel puppetChannel;
         if ((puppetChannel = channelPair.getPuppet()) == null) {
-            ctx.writeAndFlush(ProtocolUtil.createError(ApplicationType.SERVER, 100, "傀儡机未上线,请稍后再试"));
+            ctx.writeAndFlush(ProtocolUtil.error(ApplicationType.SERVER, 100, "傀儡机未上线,请稍后再试"));
             return;
         }
         if (!puppetChannel.isActive()) {
-            ctx.writeAndFlush(ProtocolUtil.createError(ApplicationType.SERVER, 100, "傀儡机连接异常,请稍后再试"));
+            ctx.writeAndFlush(ProtocolUtil.error(ApplicationType.SERVER, 100, "傀儡机连接异常,请稍后再试"));
             return;
         }
-        Channel clientChannel;
         boolean flag = false;
-        if ((clientChannel = channelPair.getClient()) != null && !(flag = clientChannel.equals(ctx.channel()))) {
-            ctx.writeAndFlush(ProtocolUtil.createError(ApplicationType.SERVER, 100, "傀儡机已经被其他客户端控制,请稍后再试"));
+        if (channelPair.getClient() != null) {
+            ctx.writeAndFlush(ProtocolUtil.error(ApplicationType.SERVER, 100, "傀儡机已处于被控制状态,请稍后再试"));
             return;
         }
         if (!flag) {
             channelPair.setClient(ctx.channel());
         }
-        ctx.writeAndFlush(ProtocolUtil.createProtocol(ApplicationType.SERVER).setType(Message.ProtocolType.CONNECT_RESPONSE));
+        ctx.writeAndFlush(ProtocolUtil.empty(ApplicationType.SERVER, Message.ProtocolType.CONNECT));
+        puppetChannel.writeAndFlush(ProtocolUtil.empty(ApplicationType.SERVER, Message.ProtocolType.CONNECT));
     }
 }

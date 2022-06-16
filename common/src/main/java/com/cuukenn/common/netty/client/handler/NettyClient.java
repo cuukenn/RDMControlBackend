@@ -8,11 +8,11 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.PreDestroy;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -22,19 +22,21 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class NettyClient {
     private final BaseNettyClientProperties properties;
-    private volatile NioEventLoopGroup eventLoopGroup;
+    private final NioEventLoopGroup eventLoopGroup = new NioEventLoopGroup();
     private volatile boolean canReconnect = false;
-    @Getter
     private volatile Channel channel;
+
+    public Optional<Channel> getChannel() {
+        return Optional.ofNullable(channel);
+    }
 
     /**
      * 启动netty
      */
     public synchronized void start() {
-        if (eventLoopGroup != null) {
+        if (channel != null && channel.isActive()) {
             return;
         }
-        eventLoopGroup = new NioEventLoopGroup();
         canReconnect = true;
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.group(new NioEventLoopGroup())
@@ -65,7 +67,7 @@ public class NettyClient {
      * 重新连接
      */
     public synchronized void reconnect() {
-        if (eventLoopGroup == null) {
+        if (!canReconnect) {
             return;
         }
         eventLoopGroup.schedule(() -> {
@@ -85,12 +87,9 @@ public class NettyClient {
     public synchronized void stop() {
         canReconnect = false;
         if (channel != null) {
+            channel.close();
             channel.disconnect();
             channel = null;
-        }
-        if (eventLoopGroup != null) {
-            eventLoopGroup.shutdownGracefully();
-            eventLoopGroup = null;
         }
     }
 }

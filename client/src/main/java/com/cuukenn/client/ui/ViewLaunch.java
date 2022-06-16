@@ -19,6 +19,7 @@ public class ViewLaunch extends Application {
             stage.setTitle("client");
             StageController stageController = SpringUtil.getBean(StageController.class);
             stageController.loadStage(FxmlConstant.MAIN, StageStyle.DECORATED);
+            stageController.loadStage(FxmlConstant.CONTROL_SCREEN, StageStyle.DECORATED);
             stageController.setPrimaryStage(stage);
             stageController.setStage(FxmlConstant.MAIN);
         } catch (Exception e) {

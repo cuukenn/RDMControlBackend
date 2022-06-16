@@ -1,33 +1,72 @@
 syntax = "proto3";
 package protocol;
 option java_package = "protocol";
-
+//通用消息
 message TransportProtocol{
+  //协议类型
   ProtocolType type = 1;
+  //消息标识
   string id = 2;
+  //傀儡机名称
   string puppetName = 3;
+  //消息载体
   oneof payload {
     NullValue null_value = 10;
     ErrorMessage error = 11;
+    ScreenMessage screen = 12;
+    KeyControlMessage key = 13;
+    MouseControlMessage mouse = 14;
   }
 }
-
+//键盘控制消息
+message KeyControlMessage{
+  bool pressed = 1;
+  bool altDown = 2;
+  bool ctrlDown = 3;
+  bool shiftDown = 4;
+  int32 keyCode = 5;
+}
+//鼠标控制消息
+message MouseControlMessage{
+  //鼠标坐标
+  int32 x = 1;
+  int32 y = 2;
+  //鼠标滚轮滚动大小
+  int32 mouseWheel = 3;
+  //鼠标操作类型
+  int32 status = 4;
+}
+//傀儡机屏幕数据
+message ScreenMessage{
+  bytes data = 1;
+}
+//错误信息
 message ErrorMessage{
   uint32 code = 1;
   string message = 2;
 }
-
+//协议类型
 enum ProtocolType{
   //异常信息
   ERROR = 0;
   //心跳
-  PING = 2;
-  PONG = 3;
+  HEART_BEAT = 2;
   //连接
-  CONNECT_REQUEST = 4;
-  CONNECT_RESPONSE = 5;
+  //控制端开始控制
+  //傀儡端开始发送屏幕数据
+  CONNECT = 4;
+  //断开连接
+  //控制端停止控制
+  //傀儡端停止发送屏幕数据
+  DISCONNECT = 6;
   //屏幕数据
-  SCREEN = 6;
+  //傀儡端发送
+  //控制端接收
+  SCREEN = 8;
+  //鼠标控制命令
+  MOUSE_CONTROL = 10;
+  //键盘控制命令
+  KEY_CONTROL = 12;
 }
 
 enum NullValue {

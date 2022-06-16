@@ -4,6 +4,7 @@ import com.cuukenn.common.netty.client.config.BaseNettyClientProperties;
 import com.cuukenn.common.netty.client.handler.NettyClient;
 import com.cuukenn.common.netty.client.handler.protocol.PongInvocation;
 import com.cuukenn.common.netty.client.ui.StageController;
+import com.cuukenn.common.netty.handler.protocol.ErrorInvocation;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,8 +15,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class NettyConfiguration {
     @Bean
-    public PongInvocation pongHandler() {
+    public PongInvocation pongInvocation() {
         return new PongInvocation();
+    }
+
+    @Bean
+    public ErrorInvocation errorInvocation() {
+        return new ErrorInvocation();
     }
 
     @Bean

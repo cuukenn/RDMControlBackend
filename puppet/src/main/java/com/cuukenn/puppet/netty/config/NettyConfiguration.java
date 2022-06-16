@@ -1,11 +1,10 @@
 package com.cuukenn.puppet.netty.config;
 
-import com.cuukenn.common.netty.client.config.BaseNettyClientProperties;
 import com.cuukenn.common.netty.client.handler.NettyClient;
 import com.cuukenn.common.netty.client.handler.NettyClientChannelInitializer;
-import com.cuukenn.common.netty.client.handler.bound.ConnectionStateWatchDog;
 import com.cuukenn.common.netty.client.handler.protocol.PongInvocation;
 import com.cuukenn.common.netty.client.ui.StageController;
+import com.cuukenn.puppet.netty.handler.bound.PuppetNameRegisterTrigger;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -24,7 +23,7 @@ public class NettyConfiguration {
 
     @Bean
     @ConfigurationProperties(prefix = "app.puppet")
-    public BaseNettyClientProperties tcpProperties() {
+    public NettyProperties tcpProperties() {
         return new NettyProperties();
     }
 
@@ -34,14 +33,15 @@ public class NettyConfiguration {
     }
 
     @Bean
-    public NettyClient nettyClient(BaseNettyClientProperties properties) {
-        return new NettyClient(properties){
+    public NettyClient nettyClient(NettyProperties properties) {
+        return new NettyClient(properties) {
             @Override
             protected ChannelHandler getChannelHandler0() {
-                return new NettyClientChannelInitializer(properties, this){
+                return new NettyClientChannelInitializer(properties, this) {
                     @Override
-                    protected void initChannel0(NioSocketChannel socketChannel) {
-                        //socketChannel.pipeline().addLast(new ConnectionStateWatchDog(nettyClient::reconnect, properties.getApplicationType()));
+                    protected void initChannel2(NioSocketChannel socketChannel) {
+                        socketChannel.pipeline().addLast(new PuppetNameRegisterTrigger(properties));
+                        super.initChannel2(socketChannel);
                     }
                 };
             }

@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FxmlConstant {
     public static final String MAIN = "/fxml/application.fxml";
+    public static final String CONTROL_SCREEN = "/fxml/control-screen.fxml";
 }

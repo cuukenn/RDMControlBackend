@@ -21,10 +21,16 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class NettyClientChannelInitializer extends ChannelInitializer<NioSocketChannel> {
     private final BaseNettyClientProperties properties;
-    private final NettyClient nettyClient;
+    protected final NettyClient nettyClient;
 
     @Override
     protected void initChannel(NioSocketChannel socketChannel) throws Exception {
+        initChannel0(socketChannel);
+        initChannel1(socketChannel);
+        initChannel2(socketChannel);
+    }
+
+    protected void initChannel0(NioSocketChannel socketChannel) {
         socketChannel.pipeline()
                 .addLast(
                         new IdleStateHandler(
@@ -32,16 +38,20 @@ public class NettyClientChannelInitializer extends ChannelInitializer<NioSocketC
                                 properties.getWriterIdleTimeSeconds(),
                                 0,
                                 TimeUnit.SECONDS)
-                )
+                );
+    }
+
+    protected void initChannel1(NioSocketChannel socketChannel) {
+        socketChannel.pipeline()
                 .addLast(new ProtobufVarint32FrameDecoder())
                 .addLast(new ProtobufDecoder(Message.TransportProtocol.getDefaultInstance()))
                 .addLast(new ProtobufVarint32LengthFieldPrepender())
-                .addLast(new ProtobufEncoder())
-                .addLast(new TransportProtocolInvocation());
-        initChannel0(socketChannel);
+                .addLast(new ProtobufEncoder());
     }
 
-    protected void initChannel0(NioSocketChannel socketChannel) {
-        socketChannel.pipeline().addLast(new ConnectionStateWatchDog(nettyClient::reconnect, properties.getApplicationType()));
+    protected void initChannel2(NioSocketChannel socketChannel) {
+        socketChannel.pipeline()
+                .addLast(new TransportProtocolInvocation())
+                .addLast(new ConnectionStateWatchDog(nettyClient::reconnect, properties.getApplicationType()));
     }
 }

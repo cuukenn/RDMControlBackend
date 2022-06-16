@@ -1,9 +1,7 @@
+package com.cuukenn.puppet.netty.handler.protocol;
 
-package com.cuukenn.client.netty.handler.protocol;
-
-import com.cuukenn.client.ui.FxmlConstant;
-import com.cuukenn.common.netty.client.ui.StageController;
 import com.cuukenn.common.netty.protocol.ITransportProtocolInvocation;
+import com.cuukenn.puppet.service.ScreenSenderService;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,17 +16,17 @@ import protocol.Message;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class ConnectedInvocation implements ITransportProtocolInvocation {
-    private final StageController stageController;
+public class TerminalControlInvocation implements ITransportProtocolInvocation {
+    private final ScreenSenderService screenSenderService;
 
     @Override
     public Message.ProtocolType getSupportType() {
-        return Message.ProtocolType.CONNECT;
+        return Message.ProtocolType.DISCONNECT;
     }
 
     @Override
     public void invoke(ChannelHandlerContext ctx, Message.TransportProtocol message) {
         log.info("connect puppet successful");
-        stageController.setStage(FxmlConstant.CONTROL_SCREEN, FxmlConstant.MAIN);
+        screenSenderService.stopSnapshotSender();
     }
 }

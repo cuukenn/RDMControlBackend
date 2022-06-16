@@ -1,4 +1,4 @@
-package com.cuukenn.server.netty.handler.protocol;
+package com.cuukenn.common.netty.handler.protocol;
 
 import com.cuukenn.common.netty.protocol.ITransportProtocolInvocation;
 import io.netty.channel.ChannelHandlerContext;
@@ -21,6 +21,7 @@ public class ErrorInvocation implements ITransportProtocolInvocation {
 
     @Override
     public void invoke(ChannelHandlerContext ctx, Message.TransportProtocol message) {
-        log.error("some error happened,id:[{}],puppetName:[{}],message:[{}]", message.getId(), message.getPuppetName(), message.getError());
+        log.error("some error happened,id:[{}],puppetName:[{}],message:[{}.{}]",
+                message.getId(), message.getPuppetName(), message.getError().getCode(), message.getError().getMessage());
     }
 }

@@ -40,14 +40,12 @@ public class ConnectionStateWatchDog extends ChannelInboundHandlerAdapter {
     }
 
     protected void doWriteIdleEvent0(ChannelHandlerContext ctx) {
-        ctx.writeAndFlush(ProtocolUtil.createProtocol(type)
-                .setType(Message.ProtocolType.PING).setNullValue(Message.NullValue.NULL_VALUE)
-                .build());
+        ctx.writeAndFlush(ProtocolUtil.empty(type, Message.ProtocolType.HEART_BEAT));
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        this.channelInactiveAction.run();
         super.channelInactive(ctx);
+        this.channelInactiveAction.run();
     }
 }

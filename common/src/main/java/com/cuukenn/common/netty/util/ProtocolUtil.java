@@ -11,9 +11,15 @@ public class ProtocolUtil {
         return Message.TransportProtocol.newBuilder().setId(IdUtil.generateId(type));
     }
 
-    public static Message.TransportProtocol createError(ApplicationType type, int code, String message) {
-        return createProtocol(type).setType(Message.ProtocolType.ERROR)
-                .setError(Message.ErrorMessage.newBuilder()
-                .setCode(code).setMessage(message)).build();
+    public static Message.TransportProtocol empty(ApplicationType type, Message.ProtocolType protocolType) {
+        return createProtocol(type, protocolType).setNull(Message.NullValue.NULL_VALUE).build();
+    }
+
+    public static Message.TransportProtocol.Builder createProtocol(ApplicationType type, Message.ProtocolType protocolType) {
+        return createProtocol(type).setType(protocolType);
+    }
+
+    public static Message.TransportProtocol error(ApplicationType type, int code, String message) {
+        return createProtocol(type, Message.ProtocolType.ERROR).setError(Message.ErrorMessage.newBuilder().setCode(code).setMessage(message).build()).build();
     }
 }
