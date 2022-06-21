@@ -12,7 +12,7 @@ public class ProtocolUtil {
     }
 
     public static Message.TransportProtocol empty(ApplicationType type, Message.ProtocolType protocolType) {
-        return createProtocol(type, protocolType).setNull(Message.NullValue.NULL_VALUE).build();
+        return createProtocol(type, protocolType).setNullValue(Message.NullValue.NULL_VALUE).build();
     }
 
     public static Message.TransportProtocol.Builder createProtocol(ApplicationType type, Message.ProtocolType protocolType) {
