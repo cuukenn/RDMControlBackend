@@ -1,6 +1,5 @@
-package com.cuukenn.client;
+package com.cuukenn.client.ui;
 
-import com.cuukenn.client.ui.ViewLaunch;
 import javafx.application.Application;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -9,10 +8,10 @@ import org.springframework.stereotype.Component;
  * @author changgg
  */
 @Component
-public class ViewSpringRunner implements CommandLineRunner {
+public class UISpringRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Application.launch(ViewLaunch.class, args);
+        Application.launch(UIApplication.class, args);
     }
 }

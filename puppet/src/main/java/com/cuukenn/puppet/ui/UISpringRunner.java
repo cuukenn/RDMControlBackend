@@ -1,9 +1,9 @@
-package com.cuukenn.puppet;
+package com.cuukenn.puppet.ui;
 
 import com.cuukenn.common.netty.client.handler.NettyClient;
-import com.cuukenn.puppet.ui.ViewLaunch;
 import javafx.application.Application;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -12,12 +12,13 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class ViewSpringRunner implements CommandLineRunner {
+@Slf4j
+public class UISpringRunner implements CommandLineRunner {
     private final NettyClient client;
 
     @Override
     public void run(String... args) throws Exception {
         client.start();
-        Application.launch(ViewLaunch.class, args);
+        Application.launch(UIApplication.class, args);
     }
 }

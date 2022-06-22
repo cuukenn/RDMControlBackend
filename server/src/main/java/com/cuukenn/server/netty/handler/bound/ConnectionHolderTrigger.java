@@ -62,12 +62,12 @@ public class ConnectionHolderTrigger extends ChannelInboundHandlerAdapter {
             ChannelPair channelPair = iterator.next().getValue();
             Channel client = channelPair.getClient();
             Channel puppet = channelPair.getPuppet();
-            if (!puppet.isActive()) {
+            if (puppet==null || !puppet.isActive()) {
                 iterator.remove();
                 total++;
                 break;
             }
-            if (!client.isActive()) {
+            if (client!=null && !client.isActive()) {
                 channelPair.setClient(null);
                 total++;
             }
