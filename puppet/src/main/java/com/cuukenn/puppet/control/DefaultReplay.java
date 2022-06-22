@@ -3,6 +3,9 @@ package com.cuukenn.puppet.control;
 import org.springframework.stereotype.Service;
 import protocol.Message;
 
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  * @author changgg
  */
@@ -56,6 +59,6 @@ public class DefaultReplay implements IReplay {
 
     @Override
     public byte[] getScreenSnapshot() {
-        return null;
+        return ("hello"+ ThreadLocalRandom.current().nextInt()).getBytes(StandardCharsets.UTF_8);
     }
 }

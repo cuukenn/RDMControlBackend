@@ -46,7 +46,7 @@ public class NettyServer {
                 .localAddress(properties.getPort())
                 .option(ChannelOption.SO_BACKLOG, 1024)
                 .childOption(ChannelOption.SO_KEEPALIVE, true)
-                .childHandler(new CustomerChannelInitializer(properties));
+                .childHandler(new ServerChannelInitializer(properties));
         bootstrap.bind().sync().addListener((ChannelFutureListener) futureListener -> {
             if (futureListener.isSuccess()) {
                 log.info("start server on port:[{}]", properties.getPort());

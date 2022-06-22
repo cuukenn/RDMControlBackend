@@ -60,7 +60,7 @@ public class NettyClient {
     }
 
     protected ChannelHandler getChannelHandler0() {
-        return new NettyClientChannelInitializer(properties, this);
+        return new ClientChannelInitializer(properties, this);
     }
 
     /**
