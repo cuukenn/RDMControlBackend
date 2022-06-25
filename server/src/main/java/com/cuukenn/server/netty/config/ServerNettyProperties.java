@@ -1,6 +1,7 @@
 package com.cuukenn.server.netty.config;
 
-import com.cuukenn.common.netty.config.NettyBaseProperties;
+import com.cuukenn.common.netty.config.BaseNettyProperties;
+import com.cuukenn.common.netty.enums.ApplicationType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,8 +12,8 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class NettyServerProperties extends NettyBaseProperties {
-    public NettyServerProperties() {
+public class ServerNettyProperties extends BaseNettyProperties {
+    public ServerNettyProperties() {
         setApplicationType(ApplicationType.SERVER);
     }
 

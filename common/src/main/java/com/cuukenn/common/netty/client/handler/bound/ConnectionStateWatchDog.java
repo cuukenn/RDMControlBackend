@@ -1,5 +1,7 @@
 package com.cuukenn.common.netty.client.handler.bound;
 
+import com.cuukenn.common.netty.enums.ApplicationType;
+import com.cuukenn.common.netty.util.ProtocolUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleState;
@@ -14,14 +16,13 @@ import protocol.Message;
  * @author changgg
  */
 @Slf4j
-public class ConnectorStateWatchDog extends ChannelInboundHandlerAdapter {
-    private static final Message.TransportProtocol PING = Message.TransportProtocol.newBuilder()
-            .setType(Message.ProtocolType.PING_REQUEST).setNullValue(Message.NullValue.NULL_VALUE)
-            .build();
+public class ConnectionStateWatchDog extends ChannelInboundHandlerAdapter {
     private final Runnable channelInactiveAction;
+    private final ApplicationType type;
 
-    public ConnectorStateWatchDog(Runnable channelInactiveAction) {
+    public ConnectionStateWatchDog(Runnable channelInactiveAction, ApplicationType type) {
         this.channelInactiveAction = channelInactiveAction;
+        this.type = type;
     }
 
     @Override
@@ -31,16 +32,20 @@ public class ConnectorStateWatchDog extends ChannelInboundHandlerAdapter {
             IdleState state = stateEvent.state();
             if (state == IdleState.WRITER_IDLE) {
                 log.debug("long time no write,send ping request to server");
-                ctx.writeAndFlush(PING);
+                this.doWriteIdleEvent0(ctx);
             }
         } else {
             super.userEventTriggered(ctx, evt);
         }
     }
 
+    protected void doWriteIdleEvent0(ChannelHandlerContext ctx) {
+        ctx.writeAndFlush(ProtocolUtil.empty(type, Message.ProtocolType.HEART_BEAT));
+    }
+
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        this.channelInactiveAction.run();
         super.channelInactive(ctx);
+        this.channelInactiveAction.run();
     }
 }

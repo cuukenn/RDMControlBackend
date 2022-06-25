@@ -12,7 +12,7 @@ import protocol.Message;
 public class PongInvocation implements ITransportProtocolInvocation {
     @Override
     public Message.ProtocolType getSupportType() {
-        return Message.ProtocolType.PONG_RESPONSE;
+        return Message.ProtocolType.HEART_BEAT;
     }
 
     @Override

@@ -1,48 +1,37 @@
 package com.cuukenn.client.netty.config;
 
-import com.cuukenn.common.netty.client.config.NettyClientProperties;
+import com.cuukenn.common.netty.client.config.BaseNettyClientProperties;
 import com.cuukenn.common.netty.client.handler.NettyClient;
 import com.cuukenn.common.netty.client.handler.protocol.PongInvocation;
-import com.cuukenn.common.netty.protocol.IProtocolInvocation;
-import com.cuukenn.common.netty.protocol.ProtocolFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.cuukenn.common.netty.handler.protocol.ErrorInvocation;
+import com.cuukenn.common.netty.handler.protocol.MessageErrorInvocation;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
 
 /**
  * @author changgg
  */
 @Configuration
-public class NettyConfiguration implements InitializingBean {
-    private List<IProtocolInvocation> protocolHandlers;
-
-    @Autowired
-    public void setProtocolHandlers(List<IProtocolInvocation> protocolHandlers) {
-        this.protocolHandlers = protocolHandlers;
-    }
-
+public class NettyConfiguration {
     @Bean
-    public PongInvocation pongHandler() {
+    public PongInvocation pongInvocation() {
         return new PongInvocation();
     }
 
     @Bean
-    @ConfigurationProperties(prefix = "app.client")
-    public NettyClientProperties tcpProperties() {
-        return new NettyClientProperties();
+    public ErrorInvocation errorInvocation() {
+        return new MessageErrorInvocation();
     }
 
     @Bean
-    public NettyClient nettyClient(NettyClientProperties properties) {
-        return new NettyClient(properties);
+    @ConfigurationProperties(prefix = "app.client")
+    public BaseNettyClientProperties tcpProperties() {
+        return new NettyProperties();
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        protocolHandlers.forEach(ProtocolFactory::addHandlers);
+    @Bean
+    public NettyClient nettyClient(BaseNettyClientProperties properties) {
+        return new NettyClient(properties);
     }
 }
