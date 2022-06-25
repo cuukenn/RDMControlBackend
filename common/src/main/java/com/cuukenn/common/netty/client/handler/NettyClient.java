@@ -1,6 +1,7 @@
 package com.cuukenn.common.netty.client.handler;
 
 import com.cuukenn.common.netty.client.config.BaseNettyClientProperties;
+import com.cuukenn.common.netty.util.UIUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
@@ -28,6 +29,14 @@ public class NettyClient {
 
     public Optional<Channel> getChannel() {
         return Optional.ofNullable(channel);
+    }
+
+    public Optional<Channel> getChannelOrError() {
+        Optional<Channel> channel = getChannel();
+        if (!channel.isPresent()) {
+            UIUtil.errorMessage(-300, "与服务器连接异常，请连接服务器或稍后再试");
+        }
+        return channel;
     }
 
     /**

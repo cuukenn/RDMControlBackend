@@ -26,7 +26,7 @@ public class TerminalControlInvocation implements ITransportProtocolInvocation {
 
     @Override
     public void invoke(ChannelHandlerContext ctx, Message.TransportProtocol message) {
-        log.info("connect puppet successful");
+        log.info("disconnect puppet successful");
         screenSenderService.stopSnapshotSender();
     }
 }
