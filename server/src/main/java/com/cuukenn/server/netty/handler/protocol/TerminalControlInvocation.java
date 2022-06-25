@@ -5,6 +5,7 @@ import com.cuukenn.common.netty.protocol.ITransportProtocolInvocation;
 import com.cuukenn.common.netty.util.ProtocolUtil;
 import com.cuukenn.server.netty.handler.bound.ConnectionHolderTrigger;
 import com.cuukenn.server.netty.pojo.ChannelPair;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import org.springframework.stereotype.Service;
 import protocol.Message;
@@ -29,6 +30,10 @@ public class TerminalControlInvocation implements ITransportProtocolInvocation {
             return;
         }
         channelPair.setClient(null);
+        Channel puppet;
+        if ((puppet = channelPair.getPuppet()) != null) {
+            puppet.writeAndFlush(ProtocolUtil.empty(ApplicationType.SERVER, Message.ProtocolType.DISCONNECT));
+        }
         ctx.writeAndFlush(ProtocolUtil.empty(ApplicationType.SERVER, Message.ProtocolType.DISCONNECT));
     }
 }

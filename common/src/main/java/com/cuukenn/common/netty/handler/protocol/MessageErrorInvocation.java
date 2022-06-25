@@ -1,6 +1,6 @@
 package com.cuukenn.common.netty.handler.protocol;
 
-import com.cuukenn.common.netty.protocol.ITransportProtocolInvocation;
+import com.cuukenn.common.netty.util.UIUtil;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
 import protocol.Message;
@@ -11,7 +11,7 @@ import protocol.Message;
  * @author changgg
  */
 @Slf4j
-public class ErrorInvocation implements ITransportProtocolInvocation {
+public class MessageErrorInvocation extends ErrorInvocation {
     @Override
     public Message.ProtocolType getSupportType() {
         return Message.ProtocolType.ERROR;
@@ -19,7 +19,7 @@ public class ErrorInvocation implements ITransportProtocolInvocation {
 
     @Override
     public void invoke(ChannelHandlerContext ctx, Message.TransportProtocol message) {
-        log.error("some error happened,id:[{}],puppetName:[{}],message:[{}.{}]",
-                message.getId(), message.getPuppetName(), message.getError().getCode(), message.getError().getMessage());
+        super.invoke(ctx, message);
+        UIUtil.errorMessage(message.getError().getCode(), message.getError().getMessage());
     }
 }

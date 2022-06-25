@@ -4,6 +4,7 @@ import com.cuukenn.common.netty.client.config.BaseNettyClientProperties;
 import com.cuukenn.common.netty.client.handler.NettyClient;
 import com.cuukenn.common.netty.client.handler.protocol.PongInvocation;
 import com.cuukenn.common.netty.handler.protocol.ErrorInvocation;
+import com.cuukenn.common.netty.handler.protocol.MessageErrorInvocation;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +21,7 @@ public class NettyConfiguration {
 
     @Bean
     public ErrorInvocation errorInvocation() {
-        return new ErrorInvocation();
+        return new MessageErrorInvocation();
     }
 
     @Bean

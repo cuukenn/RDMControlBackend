@@ -3,6 +3,7 @@ package com.cuukenn.puppet.netty.config;
 import com.cuukenn.common.netty.client.handler.ClientChannelInitializer;
 import com.cuukenn.common.netty.client.handler.NettyClient;
 import com.cuukenn.common.netty.client.handler.protocol.PongInvocation;
+import com.cuukenn.common.netty.handler.protocol.ErrorInvocation;
 import com.cuukenn.puppet.netty.handler.bound.PuppetNameRegisterTrigger;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -16,14 +17,19 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class NettyConfiguration {
     @Bean
-    @ConfigurationProperties(prefix = "app.puppet")
-    public NettyProperties tcpProperties() {
-        return new NettyProperties();
+    public ErrorInvocation errorInvocation() {
+        return new ErrorInvocation();
     }
 
     @Bean
     public PongInvocation pongHandler() {
         return new PongInvocation();
+    }
+
+    @Bean
+    @ConfigurationProperties(prefix = "app.puppet")
+    public NettyProperties tcpProperties() {
+        return new NettyProperties();
     }
 
     @Bean
