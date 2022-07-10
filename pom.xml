@@ -3,48 +3,44 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.cuukenn.remote-desktop-control</groupId>
+    <groupId>com.cuukenn.opensource.remote-desktop-control</groupId>
     <artifactId>parent</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <name>remote-desktop-control</name>
     <modules>
-        <module>dependencies</module>
+        <module>core</module>
         <module>server</module>
         <module>client</module>
         <module>puppet</module>
-        <module>common</module>
     </modules>
     <packaging>pom</packaging>
     <properties>
         <!-- *************************maven基础配置*************************************-->
         <maven.compile.fork>true</maven.compile.fork>
         <!--maven编译的JDK版本和编码字符集-->
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <!--跳过测试-->
         <maven.test.skip>true</maven.test.skip>
         <!-- *************************三方依赖版本号**************************************-->
         <!--        spring系列版本-->
-        <spring-boot.version>2.4.2</spring-boot.version>
-        <spring-cloud.version>2020.0.1</spring-cloud.version>
-        <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
-        <spring-cloud-starter-bootsratp.version>3.1.0</spring-cloud-starter-bootsratp.version>
+        <spring-boot.version>2.7.1</spring-boot.version>
         <!--        hutool工具集-->
-        <hutool.version>5.7.19</hutool.version>
-        <fastjson.version>2.0.1</fastjson.version>
+        <hutool.version>5.8.4</hutool.version>
+        <fastjson.version>2.0.8</fastjson.version>
     </properties>
     <!--子项目依赖版本统一管理-->
     <dependencyManagement>
         <dependencies>
             <!--项目依赖版本全局控制-->
             <dependency>
-                <groupId>com.cuukenn.remote-desktop-control</groupId>
-                <artifactId>dependencies</artifactId>
-                <version>1.0-SNAPSHOT</version>
-                <type>pom</type>
-                <scope>import</scope>
+                <groupId>com.cuukenn.opensource.remote-desktop-control</groupId>
+                <artifactId>core</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <!--springboot依赖控制-->
             <dependency>
@@ -53,28 +49,6 @@
                 <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-            <!--spring cloud依赖控制-->
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <!--spring cloud alibaba依赖控制-->
-            <dependency>
-                <groupId>com.alibaba.cloud</groupId>
-                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>${spring-cloud-alibaba.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <!--spring-cloud-starter-bootstrap依赖控制-->
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-bootstrap</artifactId>
-                <version>${spring-cloud-starter-bootsratp.version}</version>
             </dependency>
             <!--Java工具集-->
             <dependency>
@@ -128,25 +102,14 @@
         </profile>
     </profiles>
     <build>
-        <resources>
-            <!--spring cloud需要对boostrap资源进行特殊过滤-->
-            <resource>
-                <!--将bootstrap配置文件列入maven变量替换范围-->
-                <directory>${basedir}/src/main/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/bootstrap*.yml</include>
-                </includes>
-            </resource>
-            <resource>
-                <!--将bootstrap配置文件之外的文件也列为资源文件进行打包-->
-                <directory>${basedir}/src/main/resources</directory>
-                <filtering>false</filtering>
-                <excludes>
-                    <exclude>**/bootstrap*.yml</exclude>
-                </excludes>
-            </resource>
-        </resources>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
     <!--设置远程仓库地址为阿里云仓库-->
     <repositories>
