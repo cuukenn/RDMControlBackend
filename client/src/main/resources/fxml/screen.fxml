@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.ScrollPane?>
+<ScrollPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            prefHeight="600.0" prefWidth="800.0" stylesheets="/fxml/index.css"
+            pannable="true"
+            fx:id="pane"
+            fx:controller="com.cuukenn.opensource.remote_desktop_control.client.domain.ui.controller.ScreenController">
+    <Canvas fx:id="canvas"/>
+</ScrollPane>

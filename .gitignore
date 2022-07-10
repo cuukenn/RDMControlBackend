@@ -6,4 +6,4 @@
 /**/*.iws
 
 #protobuff自动生成类
-/common/src/main/java/protocol/
+/core/src/main/java/protocol/
