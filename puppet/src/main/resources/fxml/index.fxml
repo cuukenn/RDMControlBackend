@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <AnchorPane prefHeight="600.0" prefWidth="800.0" stylesheets="/fxml/index.css" xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cuukenn.puppet.ui.controller.IndexController">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cuukenn.opensource.remote_desktop_control.puppet.domain.ui.controller.IndexController">
     <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
           AnchorPane.topAnchor="0.0">
         <MenuBar cache="true">
