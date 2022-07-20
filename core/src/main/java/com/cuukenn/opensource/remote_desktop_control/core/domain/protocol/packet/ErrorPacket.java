@@ -16,6 +16,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ErrorPacket extends AbstractMetadataPacket {
+    private static final long serialVersionUID = -1L;
     private Integer code;
     private String message;
 

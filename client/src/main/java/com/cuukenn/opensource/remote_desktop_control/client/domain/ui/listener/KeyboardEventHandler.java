@@ -4,6 +4,7 @@ import com.cuukenn.opensource.remote_desktop_control.client.domain.ui.event.keyB
 import com.cuukenn.opensource.remote_desktop_control.core.domain.event.EventFactory;
 import com.cuukenn.opensource.remote_desktop_control.core.domain.protocol.packet.input.KeyBoardControlPacket;
 import javafx.event.EventHandler;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,17 +21,10 @@ public class KeyboardEventHandler implements EventHandler<KeyEvent> {
         packet.setShiftDown(event.isShiftDown());
         packet.setAltDown(event.isAltDown());
         packet.setShortcutDown(event.isShortcutDown());
-        //按键类型
-        if (event.getEventType().equals(KeyEvent.KEY_PRESSED)) {
-            packet.setKeyStatus(KeyBoardControlPacket.KeyStatus.PRESSED.getCode());
-        } else if (event.getEventType().equals(KeyEvent.KEY_RELEASED)) {
-            packet.setKeyStatus(KeyBoardControlPacket.KeyStatus.RELEASED.getCode());
-        } else if (event.getEventType().equals(KeyEvent.KEY_TYPED)) {
-            packet.setKeyStatus(KeyBoardControlPacket.KeyStatus.TYPED.getCode());
-        } else {
-            packet.setKeyStatus(KeyBoardControlPacket.KeyStatus.NULL.getCode());
+        if (event.getCode() != KeyCode.UNDEFINED) {
+            packet.setKeyCode(event.getCode().getCode());
         }
-        packet.setKeyCode(event.getCode().getCode());
         EventFactory.postAsync(new keyBoardBoardControlEvent(packet));
+        event.consume();
     }
 }

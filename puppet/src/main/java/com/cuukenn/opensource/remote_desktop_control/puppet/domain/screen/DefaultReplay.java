@@ -1,6 +1,7 @@
 package com.cuukenn.opensource.remote_desktop_control.puppet.domain.screen;
 
 import com.cuukenn.opensource.remote_desktop_control.core.domain.protocol.packet.input.KeyBoardControlPacket;
+import com.cuukenn.opensource.remote_desktop_control.core.domain.protocol.packet.input.MouseButton;
 import com.cuukenn.opensource.remote_desktop_control.core.domain.protocol.packet.input.MouseControlPacket;
 import com.cuukenn.opensource.remote_desktop_control.core.infrastructure.util.JavacvUtil;
 import lombok.SneakyThrows;
@@ -8,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -29,12 +32,71 @@ public class DefaultReplay implements IReplay {
 
     @Override
     public void mouseAction(MouseControlPacket packet) {
-        log.info("action:{}", packet);
+        log.debug("action:{}", packet);
+        if (packet.getPoint() != null) {
+            robot.mouseMove(packet.getPoint()[0], packet.getPoint()[1]);
+        }
+        MouseButton button = MouseButton.transform(packet.getMouseButton());
+        switch (button) {
+            case LEFT:
+                mouseClick(InputEvent.BUTTON1_DOWN_MASK, packet.isDoubleClick());
+                break;
+            case RIGHT:
+                mouseClick(InputEvent.BUTTON3_DOWN_MASK, packet.isDoubleClick());
+                break;
+            case MIDDLE:
+                mouseClick(InputEvent.BUTTON2_DOWN_MASK, packet.isDoubleClick());
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * click mouse
+     *
+     * @param buttons     mouse button
+     * @param doubleClick 是否双击
+     */
+    private void mouseClick(int buttons, boolean doubleClick) {
+        if (doubleClick) {
+            robot.mousePress(buttons);
+            robot.mouseRelease(buttons);
+            robot.mousePress(buttons);
+            robot.mouseRelease(buttons);
+        } else {
+            robot.mousePress(buttons);
+            robot.mouseRelease(buttons);
+        }
     }
 
     @Override
     public void keyBoardAction(KeyBoardControlPacket packet) {
         log.info("action:{}", packet);
+        if (packet.isCtrlDown()) {
+            robot.keyPress(KeyEvent.VK_CONTROL);
+        }
+        if (packet.isAltDown()) {
+            robot.keyPress((KeyEvent.VK_ALT));
+        }
+        if (packet.isShiftDown()) {
+            robot.keyPress((KeyEvent.VK_SHIFT));
+        }
+        if (packet.getKeyCode() != null) {
+            robot.keyPress(packet.getKeyCode());
+        }
+        if (packet.isCtrlDown()) {
+            robot.keyRelease(KeyEvent.VK_CONTROL);
+        }
+        if (packet.isAltDown()) {
+            robot.keyRelease((KeyEvent.VK_ALT));
+        }
+        if (packet.isShiftDown()) {
+            robot.keyRelease((KeyEvent.VK_SHIFT));
+        }
+        if (packet.getKeyCode() != null) {
+            robot.keyRelease(packet.getKeyCode());
+        }
     }
 
     /**

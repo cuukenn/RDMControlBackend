@@ -16,6 +16,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ScreenPacket extends AbstractMetadataPacket {
+    private static final long serialVersionUID = -1L;
     private String puppetId;
     private double scaleX;
     private double scaleY;

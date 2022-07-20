@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public abstract class Packet implements Serializable {
     private final static Map<Byte, Class<? extends Packet>> PACKET_TYPES = new ConcurrentHashMap<>();
+    private static final long serialVersionUID = -1L;
 
     static {
         int count = 0;

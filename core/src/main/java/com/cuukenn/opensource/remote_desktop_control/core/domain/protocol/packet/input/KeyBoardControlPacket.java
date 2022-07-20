@@ -3,9 +3,7 @@ package com.cuukenn.opensource.remote_desktop_control.core.domain.protocol.packe
 import com.cuukenn.opensource.remote_desktop_control.core.domain.protocol.AbstractMetadataPacket;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 /**
@@ -16,6 +14,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 public class KeyBoardControlPacket extends AbstractMetadataPacket {
+    private static final long serialVersionUID = -1L;
     /**
      * 是否按住alt
      */
@@ -32,45 +31,10 @@ public class KeyBoardControlPacket extends AbstractMetadataPacket {
      * 是否按住截屏键
      */
     private boolean shortcutDown;
-    private int keyStatus;
-    private int keyCode;
-
-    public KeyStatus getKeyStatus(Integer code) {
-        if (code == null) {
-            return KeyStatus.NULL;
-        }
-        for (KeyStatus type : KeyStatus.values()) {
-            if (type.getCode() == code) {
-                return type;
-            }
-        }
-        return KeyStatus.NULL;
-    }
+    private Integer keyCode;
 
     @Override
     public byte getType() {
         return 4;
-    }
-
-    /**
-     * 键位状态
-     */
-    @RequiredArgsConstructor
-    @Getter
-    public enum KeyStatus {
-        NULL(0),
-        /**
-         * 按下
-         */
-        PRESSED(1),
-        /**
-         * 松开
-         */
-        RELEASED(2),
-        /**
-         * 按下后松开
-         */
-        TYPED(3);
-        private final int code;
     }
 }

@@ -14,6 +14,8 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 public class PongPacket extends AbstractMetadataPacket {
+    private static final long serialVersionUID = -1L;
+
     @Override
     public byte getType() {
         return 1;

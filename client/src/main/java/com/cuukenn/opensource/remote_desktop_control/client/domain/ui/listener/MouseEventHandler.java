@@ -20,8 +20,7 @@ public class MouseEventHandler implements EventHandler<MouseEvent> {
         log.debug("{}", event);
         MouseControlPacket packet = new MouseControlPacket();
         //鼠标坐标
-        packet.setX(event.getX());
-        packet.setY(event.getY());
+        packet.setPoint(new int[]{(int) event.getX(), (int) event.getY()});
         //组合键状态
         packet.setCtrlDown(event.isControlDown());
         packet.setShiftDown(event.isShiftDown());

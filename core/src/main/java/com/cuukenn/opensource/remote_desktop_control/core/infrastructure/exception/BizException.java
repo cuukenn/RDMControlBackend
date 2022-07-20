@@ -18,4 +18,9 @@ public class BizException extends RuntimeException {
         super(message);
         this.code = code;
     }
+
+    public BizException(Integer code, String message, Throwable throwable) {
+        super(message,throwable);
+        this.code = code;
+    }
 }

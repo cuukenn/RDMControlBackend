@@ -12,6 +12,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 public abstract class AbstractMetadataPacket extends Packet {
+    private static final long serialVersionUID = -1L;
     @Setter(AccessLevel.MODULE)
     @Getter
     private String id;

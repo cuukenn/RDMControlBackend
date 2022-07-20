@@ -14,18 +14,12 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @NoArgsConstructor
 public class MouseControlPacket extends AbstractMetadataPacket {
-    /**
-     * x坐标
-     */
-    private double x;
-    /**
-     * y坐标
-     */
-    private double y;
+    private static final long serialVersionUID = -1L;
+    private int[] point;
     /**
      * 鼠标按键
      */
-    private int mouseButton;
+    private Integer mouseButton;
     /**
      * 双击
      */

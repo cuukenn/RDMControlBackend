@@ -27,4 +27,16 @@ public enum MouseButton {
      */
     MIDDLE(3);
     private final int code;
+
+    public static MouseButton transform(Integer code) {
+        if (code == null) {
+            return NONE;
+        }
+        for (MouseButton type : MouseButton.values()) {
+            if (type.getCode() == code) {
+                return type;
+            }
+        }
+        return NONE;
+    }
 }
