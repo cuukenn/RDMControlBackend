@@ -1,8 +1,0 @@
-com.cuukenn.opensource.remote_desktop_control.core.domain.protocol.packet.input.MouseControlPacket
-com.cuukenn.opensource.remote_desktop_control.core.domain.protocol.packet.input.KeyBoardControlPacket
-com.cuukenn.opensource.remote_desktop_control.core.domain.protocol.packet.DisconnectPacket
-com.cuukenn.opensource.remote_desktop_control.core.domain.protocol.packet.ConnectPacket
-com.cuukenn.opensource.remote_desktop_control.core.domain.protocol.packet.ScreenPacket
-com.cuukenn.opensource.remote_desktop_control.core.domain.protocol.packet.PingPacket
-com.cuukenn.opensource.remote_desktop_control.core.domain.protocol.packet.PongPacket
-com.cuukenn.opensource.remote_desktop_control.core.domain.protocol.packet.ErrorPacket
